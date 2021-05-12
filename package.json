@@ -1,7 +1,7 @@
 {
-  "name": "nodejs-mysql-transaction",
+  "name": "express-js-with-sequelize-transaction",
   "version": "1.0.0",
-  "description": "A demo repo for nodejs mysql transaction",
+  "description": "A demo repo for nodejs sequelize mysql transaction",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
