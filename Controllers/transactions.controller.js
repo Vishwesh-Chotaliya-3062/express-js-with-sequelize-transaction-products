@@ -1,14 +1,21 @@
 const mysql = require("mysql2/promise");
 const dbConfig = require("../config/db.config");
 
+exports.getSignup = async (req, res, next) => {
+  res.render('shoppingcart');
+};
+
 exports.transactions = (req, res) => {
   async function createOrder() {
+
     const SKU1 = req.body.SKU1;
     const SKU2 = req.body.SKU2;
     // const SKU3 = req.body.SKU3;
     // const SKU4 = req.body.SKU4;
     // const SKU5 = req.body.SKU5;
     const items = [SKU1, SKU2];
+
+    console.log(items)
 
     const connection = await mysql.createConnection(dbConfig.db);
 
@@ -57,17 +64,9 @@ exports.transactions = (req, res) => {
         "SELECT LAST_INSERT_ID() as order_SalesorderID"
       );
 
-      res
-        .status(200)
-        .json({
-          Transaction: "Finished setting the isolation level to read committed",
-          Lock: `Locked rows for SKUs ${items.join()}`,
-          Total: "Selected quantities for items",
-          Success: `order created with id ${rows[0].order_SalesorderID}`,
-          Update: `Deducted Quantities by 1 for ${items.join()}`,
-        });
-
         console.log(`Order Created with id ${rows[0].order_SalesorderID}`)
+
+        res.redirect('success');
     } catch (err) {
       connection.rollback();
       res

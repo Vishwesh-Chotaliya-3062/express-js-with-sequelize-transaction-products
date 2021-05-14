@@ -8,29 +8,58 @@
 8. Commit the transaction
 9. If there is an issue between steps 3–8, it will rollback the whole transaction
 
+
 <!-- Transactions as seen below: -->
-PS D:\Node Js Projects\nodejs-mysql-transaction-master> node index.js
-Locked rows for skus RI0002,CB0004
-Selected quantities for items
-Quantity for Rice 1 Kg is 10
-Quantity for Sabzi 1 Kg is 4
-Order created
-Deducted quantities by 1 for RI0002,CB0004
-order created with id 1
 
+10. Run server.js file
 
-10. With the right isolation and locking, for the place order transaction, one of the competing transactions will wait while the other is successful.
-11. So the waiting ones will get an “Out of stock error” like below:
+PS D:\Node Js Projects\express-js-with-sequelize-transaction> node server
+Server is running on port 8080.
+Executing (default): CREATE TABLE IF NOT EXISTS `product` (`ProductID` INTEGER auto_increment , `ProductName` VARCHAR(255) NOT NULL, `SKU` VARCHAR(255) NOT NULL UNIQUE, `Price` INTEGER NOT NULL, `Quantity` INTEGER NOT NULL, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`ProductID`)) ENGINE=InnoDB;   
+Executing (default): SHOW INDEX FROM `product`
+Executing (default): CREATE TABLE IF NOT EXISTS `salesorder` (`SalesorderID` INTEGER auto_increment , `Items` TEXT NOT NULL, `Total` INTEGER NOT NULL, PRIMARY KEY (`SalesorderID`)) ENGINE=InnoDB;
+Executing (default): SHOW INDEX FROM `salesorder`
+
+11. Send Post Request in Postman with address:
+
+	localhost:8080/transactions 
+
+12. Just pass SKUs of items which you want to Order in body part in postman as:
+
+	{
+    	    "SKU1":"CB0004",
+   	    "SKU2":"HS0005"
+	}
+
+13. After Successfull Order:
+
+	{
+  	    "Transaction": "Finished setting the isolation level to read committed",
+   	    "Lock": "Locked rows for SKUs CB0004,HS0005",
+    	    "Total": "Selected quantities for items",
+   	    "Success": "order created with id 38",
+   	    "Update": "Deducted Quantities by 1 for CB0004,HS0005"
+	}
+
+14. With the right isolation and locking, for the place order transaction, one of the competing transactions will wait while the other is successful.
+
 
 <!-- Out of stock error -->
-PS D:\Node Js Projects\nodejs-mysql-transaction-master> node index.js
-Finished setting the isolation level to read committed
-Locked rows for skus RI0002,CB0004
-Selected quantities for items
-Quantity for Rice 1 Kg is 6
-Error occurred while creating order: One of the items is out of stock Sabzi 1 Kg Error: One of the items is out of stock Sabzi 1 Kg
-    at createOrder (D:\Node Js Projects\nodejs-mysql-transaction-master\index.js:23:15)
-    at processTicksAndRejections (internal/process/task_queues.js:93:5)
-    at async testOrderCreate (D:\Node Js Projects\nodejs-mysql-transaction-master\index.js:51:15)
-Rollback successful
-error creating order
+
+15. So the waiting ones will get an “Out of stock error” in console like below:
+
+PS D:\Node Js Projects\express-js-with-sequelize-transaction> node server
+Server is running on port 8080.
+Executing (default): CREATE TABLE IF NOT EXISTS `product` (`ProductID` INTEGER auto_increment , `ProductName` VARCHAR(255) NOT NULL, `SKU` VARCHAR(255) NOT NULL UNIQUE, `Price` INTEGER NOT NULL, `Quantity` INTEGER NOT NULL, `createdAt` DATETIME NOT NULL, `updatedAt` DATETIME NOT NULL, PRIMARY KEY (`ProductID`)) ENGINE=InnoDB;   
+Executing (default): SHOW INDEX FROM `product`
+Executing (default): CREATE TABLE IF NOT EXISTS `salesorder` (`SalesorderID` INTEGER auto_increment , `Items` TEXT NOT NULL, `Total` INTEGER NOT NULL, PRIMARY KEY (`SalesorderID`)) ENGINE=InnoDB;
+Executing (default): SHOW INDEX FROM `salesorder`
+One of the items is out of stock Sabzi 1 Kg 
+Rollback Successful
+
+16. So the waiting ones will get an “Out of stock error” in response like below:
+
+	{
+    	     "error": "One of the items is out of stock Sabzi 1 Kg",
+    	     "message": "Rollback successful"
+	}

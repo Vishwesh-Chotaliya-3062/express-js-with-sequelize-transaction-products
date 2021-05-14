@@ -3,6 +3,8 @@ module.exports = (app) => {
   
     var router = require("express").Router();
   
+    router.get('/transactions', transaction.getSignup);
+
     router.post("/transactions", transaction.transactions);
   
     app.use("/", router);

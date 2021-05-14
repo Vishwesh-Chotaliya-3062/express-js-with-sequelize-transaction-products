@@ -1,8 +1,12 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const path = require('path');
 
 const app = express();
+
+app.set('view engine', 'ejs');
+app.set('views', 'views');
 
 var corsOptions = {
   origin: "http://localhost:8081",
@@ -28,6 +32,11 @@ app.get("/", (req, res) => {
 });
 
 require("./routes/transactions.route")(app);
+
+require("./routes/success.route")(app);
+
+app.use(express.static(path.join(__dirname, 'views')));
+
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;
