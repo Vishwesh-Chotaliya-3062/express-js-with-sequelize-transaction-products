@@ -35,6 +35,8 @@ require("./routes/transactions.route")(app);
 
 require("./routes/success.route")(app);
 
+require("./routes/outofstock.route")(app);
+
 app.use(express.static(path.join(__dirname, 'views')));
 
 

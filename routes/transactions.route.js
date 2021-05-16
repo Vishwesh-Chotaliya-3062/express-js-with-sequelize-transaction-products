@@ -1,12 +1,14 @@
 module.exports = (app) => {
-    const transaction = require("../Controllers/transactions.controller");
+  const transaction = require("../Controllers/transactions.controller");
   
-    var router = require("express").Router();
-  
-    router.get('/transactions', transaction.getSignup);
+  var router = require("express").Router();
 
-    router.post("/transactions", transaction.transactions);
-  
-    app.use("/", router);
-  };
-  
+  var cookieParser = require('cookie-parser');
+  app.use(cookieParser());
+
+  router.get("/transactions", transaction.getTransactions);
+
+  router.post("/transactions", transaction.transactions);
+
+  app.use("/", router);
+};

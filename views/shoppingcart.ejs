@@ -1,55 +1,93 @@
 <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0 ,user-scalable=no">
-    <link rel="shortcut icon" href="images/favicon.ico">
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/fontawesome/css/all.min.css">
-    <link rel="stylesheet" href="css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/responsive.css">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0 ,user-scalable=no">
+  <link rel="shortcut icon" href="images/favicon.ico">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/fontawesome/css/all.min.css">
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
 </head>
 
 <body>
 
-    <section id="login">
-        <img src="images/pre-login/banner-with-overlay.jpg" id="login-bg-img" alt="">
+  <section id="login">
+    <img src="images/pre-login/banner-with-overlay.jpg" id="login-bg-img" alt="">
 
-        <div id="login-content">
-            
-            <div class="container-cust" id="login-form" style="margin-bottom: -30px;">
-                <div id="login-heading">
-                    <p>Checkout</p>
-                </div>
-                <div id="login-text-1">
-                    <p>Add Items</p>
-                </div>
-                <form action="http://localhost:8080/transactions" method="post">
-                    <div class="form-group ip-text" style="margin-top: 0px;">
-                        <div class="input-auth">
-                            <label for="email">Item1</label>
-                            <input type="text" class="form-control input-field" id="SKU1" name="SKU1" placeholder="Enter First Item's SKU">
-                        </div>
-                    </div>
+    <div id="login-content">
 
-                    <div class="form-group ip-text">
-                        <div class="input-auth">
-                            <label for="email">Item2</label>
-                            <input type="text" class="form-control input-field" id="SKU2" name="SKU2" placeholder="Enter Second Item's SKU">
-                        </div>
-                    </div>
-                    
-                    <div id="login-btn" style="margin-bottom: 40px; margin-top: 50px;">
-                        <button type="submit" class="btn btn-login" id="submit" value="Sign Up" data-toggle="modal">PURCHASE</button>
-                    </div>
-                                    
-                </form>
-            </div>
+      <div class="container-cust" id="login-form" style="margin-bottom: -30px;">
+        <div id="login-heading">
+          <p>Checkout</p>
         </div>
+        <div id="login-text-1">
+          <p>Add Items</p>
+        </div>
+        <form action="http://localhost:8080/transactions" method="post" onsubmit="return validateForm()" name="Form">
 
-    </section>
-    
-    <script src="js/jquery-3.5.1.js"></script>
-    <script src="js/popper.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/script.js"></script>
+          <div class="form-group" style="width:480px;right: auto; left: 50% ;
+          transform: translate(10%, 0)">
+            <select name="SKU1" class="form-control" id="SKU1">
+              <option value="" selected hidden>Select Product</option>
+              <% for(let product in productList) { %>
+                <option value="<%= productList[product].SKU + productList[product].ProductName %>">
+                  <%= productList[product].SKU %> (<%= productList[product].ProductName %>)
+                </option>
+                <% } %>
+            </select>
+          </div>
+
+          <div class="form-group" style="width:480px;right: auto; left: 50% ;
+          transform: translate(10%, 0)">
+            <select name="SKU2" class="form-control" id="SKU2">
+              <option value="" selected hidden>Select Product</option>
+              <% for(let product in productList) { %>
+                <option value="<%= productList[product].SKU + productList[product].ProductName %>">
+                  <%= productList[product].SKU %> (<%= productList[product].ProductName %>)
+                </option>
+                <% } %>
+            </select>
+          </div>
+
+          <div class="form-group" style="width:480px;right: auto; left: 50% ;
+          transform: translate(10%, 0)">
+            <select name="SKU3" class="form-control" id="SKU3">
+              <option value="" selected hidden>Select Product</option>
+              <% for(let product in productList) { %>
+                <option value="<%= productList[product].SKU + productList[product].ProductName %>">
+                  <%= productList[product].SKU %> (<%= productList[product].ProductName %>)
+                </option>
+                <% } %>
+            </select>
+          </div>
+
+          <div id="login-btn" style="margin-bottom: 40px; margin-top: 50px;">
+            <button type="submit" class="btn btn-login" id="submit" value="Sign Up"
+              data-toggle="modal">PURCHASE</button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+
+  </section>
+
+  <script type="text/javascript">
+    function validateForm() {
+      var SKU1 = document.forms["Form"]["SKU1"].value;
+      var SKU2 = document.forms["Form"]["SKU2"].value;
+      var SKU3 = document.forms["Form"]["SKU3"].value;
+
+      if (SKU1 == "" && SKU2 == "" && SKU3 == "") {
+        alert("Please add at least one item");
+
+        return false;
+      }
+    }
+  </script>
+
+  <script src="js/jquery-3.5.1.js"></script>
+  <script src="js/popper.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script src="js/script.js"></script>
 </body>
