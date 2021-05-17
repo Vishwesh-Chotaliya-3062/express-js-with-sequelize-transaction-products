@@ -2,7 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const path = require('path');
-
+const db = require("./models");
 const app = express();
 
 app.set('view engine', 'ejs');
@@ -18,7 +18,12 @@ app.use(bodyParser.json());
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
-const db = require("./models");
+try {
+  db.sequelize.authenticate();
+  console.log("Connection has been established successfully.");
+} catch (error) {
+  console.error("Unable to connect to the database:", error);
+}
 
 db.sequelize.sync();
 // drop the table if it already exists

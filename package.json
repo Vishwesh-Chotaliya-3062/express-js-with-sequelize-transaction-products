@@ -21,8 +21,7 @@
     "headers": "^0.9.6",
     "jsdom": "^16.5.3",
     "mysql2": "^2.2.5",
-    "sequelize": "^6.6.2",
-    "vue-click-outside": "github:vue-bulma/click-outside"
+    "sequelize": "^6.6.2"
   },
   "devDependencies": {
     "nodemon": "^2.0.7"

@@ -3,8 +3,9 @@ const dbConfig = require("../config/db.config");
 
 const db = require("../models");
 const Product = db.product;
+const Salesorder = db.salesorder;
 
-var express = require('express');
+var express = require("express");
 var app = express();
 var cookieParser = require("cookie-parser");
 app.use(cookieParser());
@@ -29,13 +30,12 @@ exports.transactions = (req, res) => {
     const sku2 = req.body.SKU2;
     const sku3 = req.body.SKU3;
 
-    const SKU1 = sku1.substring(0,6);
-    const SKU2 = sku2.substring(0,6);
-    const SKU3 = sku3.substring(0,6);
-    // const SKU4 = req.body.SKU4;
-    // const SKU5 = req.body.SKU5;
+    const SKU1 = sku1.substring(0, 6);
+    const SKU2 = sku2.substring(0, 6);
+    const SKU3 = sku3.substring(0, 6);
+
     const items = [SKU1, SKU2, SKU3];
-    
+
     const product1List = await Product.findOne({
       attributes: ["ProductID", "SKU", "Price"],
       where: {
@@ -58,25 +58,42 @@ exports.transactions = (req, res) => {
     });
 
     console.log(items);
-    res.cookie('items', items);
+    res.cookie("items", items);
 
     const connection = await mysql.createConnection(dbConfig.db);
 
     await connection.execute("SET TRANSACTION ISOLATION LEVEL READ COMMITTED");
 
-    //set wait timeout and lock wait timeout as per need.
-    await connection.beginTransaction();
+    // First, we start a transaction and save it into a variable
+    const t = await db.sequelize.transaction();
 
     try {
+      // Then, we do some calls passing this transaction as an option:
+
       await connection.execute(
         "SELECT ProductID, ProductName FROM product WHERE SKU IN (?, ?, ?) FOR UPDATE",
         items
       );
 
-      const [itemsToOrder] = await connection.execute(
-        "SELECT ProductName, Quantity, Price from product WHERE SKU IN (?, ?, ?) ORDER BY ProductID",
-        items
-      );
+      // await Product.findAll({
+      //   attributes: ["ProductID", "ProductName"],
+      //   where: {
+      //     SKU: items,
+      //   }
+      // });
+
+      // const [itemsToOrder] = await connection.execute(
+      //   "SELECT ProductName, Quantity, Price from product WHERE SKU IN (?, ?, ?) ORDER BY ProductID",
+      //   items
+      // );
+
+      const itemsToOrder = await Product.findAll({
+        attributes: ["ProductName", "Quantity", "Price"],
+        order: [["ProductID"]],
+        where: {
+          SKU: items,
+        },
+      });
 
       let orderTotal = 0;
       let orderItems = [];
@@ -87,11 +104,10 @@ exports.transactions = (req, res) => {
             `One of the items is out of stock ${itemToOrder.ProductName}`
           );
         }
-        
+
         orderTotal =
           product1List.Price + product2List.Price + product3List.Price;
         orderItems.push(itemToOrder.ProductName);
-        
       }
       await connection.execute(
         "INSERT INTO salesorder (Items, Total) VALUES (?, ?)",
@@ -105,18 +121,34 @@ exports.transactions = (req, res) => {
         items
       );
 
-      await connection.commit();
-      const [rows] = await connection.execute(
-        "SELECT LAST_INSERT_ID() as order_SalesorderID"
-      );
+      // If the execution reaches this line, no errors were thrown.
+      // We commit the transaction.
+      await t.commit();
 
-      console.log(`Order Created with id ${rows[0].order_SalesorderID}`);
+      // const [rows] = await connection.execute(
+      //   "SELECT LAST_INSERT_ID() as order_SalesorderID"
+      // );
 
-      res.cookie('SalesorderID', rows[0].order_SalesorderID);
+      const rows = await Salesorder.findOne({
     
+        attributes: ["SalesorderID"],
+        order: [['SalesorderID', 'DESC']],
+        limit: 1,
+      })
+
+      const SalesorderID = rows.dataValues.SalesorderID;
+      
+      console.log(`Order Created with id ${SalesorderID}`);
+
+      // res.cookie("SalesorderID", SalesorderID);
+
       res.redirect("success");
+
     } catch (err) {
-      await connection.rollback();
+
+      // If the execution reaches this line, an error was thrown.
+      // We rollback the transaction.
+      await t.rollback();
 
       await res.redirect("outofstock");
       // res

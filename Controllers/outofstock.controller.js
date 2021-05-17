@@ -10,7 +10,7 @@ exports.getOutofstock = async (req, res, next) => {
   try {
 
     const purchaseditemList = req.cookies;
-    console.log("items", purchaseditemList.items);
+    console.log("Cookies Items:", purchaseditemList.items);
 
     const productList = await Product.findAll({
       attributes: [

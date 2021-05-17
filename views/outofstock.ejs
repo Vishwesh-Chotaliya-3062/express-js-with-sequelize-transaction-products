@@ -34,13 +34,15 @@
                         <% } %>
                       </div>
                       <div class="modal-main-text">
+                        <% for(let product in productList) { %>
                         <h3>Dear User,</h3><br>
                         <p>We are so sorry!</p>
                         <p>As this project works on Transaction Management 
                         You are a bit late to purchase your items.
-                        Currently some items from your cart is out of stock.</p>
-                        <p>We will let you know if any product of your cart will be in stock we will notify you.<br><br>Next time, Please do it in hurry</p>
+                        Currently <b><%= productList[product].ProductName %></b> from your cart is out of stock.</p>
+                        <p>We'll let you know if any of your cart products will be back in stock.<br><br>Next time, Please do it in hurry!</p>
                         <p style="margin-bottom: 0;">Have a good day.</p>
+                        <% } %>
                       </div>
                     </div>
                   </div>
