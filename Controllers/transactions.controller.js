@@ -70,10 +70,17 @@ exports.transactions = (req, res) => {
     try {
       // Then, we do some calls passing this transaction as an option:
 
-      await connection.execute(
-        "SELECT ProductID, ProductName FROM product WHERE SKU IN (?, ?, ?) FOR UPDATE",
-        items
-      );
+      // await connection.execute(
+      //   "SELECT ProductID, ProductName FROM product WHERE SKU IN (?, ?, ?) FOR UPDATE",
+      //   items
+      // );
+
+      Product.findAll({
+        where:{
+          SKU: items
+        },
+        lock: t.LOCK.UPDATE 
+     })
 
       // await Product.findAll({
       //   attributes: ["ProductID", "ProductName"],
