@@ -123,9 +123,83 @@ exports.transactions = (req, res) => {
         console.log(orderTotal)
       );
 
+      let a = '';
+      let b = '';
+      let c = '';
+      let p = '';
+      let q = '';
+      let r = '';
+
+      if(SKU1 === SKU2)
+      {
+          if(SKU1 === SKU3)
+          {
+            a = SKU1;
+            b = SKU2;
+            c = SKU3;
+            p = SKU1;
+            q = SKU2;
+            r = SKU3;
+          }
+          else{
+            a = SKU1;
+            b = SKU2;
+          }
+      }
+
+      if(SKU1 === SKU3)
+      {
+          if(SKU1 === SKU2)
+          {
+            a = SKU1;
+            b = SKU2;
+            c = SKU3;
+            p = SKU1;
+            q = SKU2;
+            r = SKU3;
+          }
+          else{
+            a = SKU1;
+            c = SKU3;
+          }
+      }
+
+      if(SKU2 === SKU3)
+      {
+          if(SKU2 === SKU1)
+          {
+            a = SKU1;
+            b = SKU2;
+            c = SKU3;
+            p = SKU1;
+            q = SKU2;
+            r = SKU3;
+          }
+          else{
+            b = SKU2;
+            c = SKU3;
+          }
+      }
+
+      let sameTwo = [a,b,c];
+      let sameAll = [p,q,r];
+
+      console.log("Two same items", sameTwo);
+      console.log("All same items", sameAll);
+
       await connection.execute(
         `UPDATE product SET Quantity=Quantity - 1 WHERE SKU IN (?, ?, ?)`,
         items
+      );
+
+      await connection.execute(
+        `UPDATE product SET Quantity = Quantity - 1 WHERE SKU IN (?, ?, ?)`,
+        sameTwo
+      );
+
+      await connection.execute(
+        `UPDATE product SET Quantity = Quantity - 1 WHERE SKU IN (?, ?, ?)`,
+        sameAll
       );
 
       // If the execution reaches this line, no errors were thrown.

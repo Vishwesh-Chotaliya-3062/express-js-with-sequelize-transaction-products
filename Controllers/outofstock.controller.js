@@ -1,6 +1,6 @@
 const db = require("../models");
 const Product = db.product;
-
+const Op = db.Sequelize.Op;
 var express = require('express');
 var app = express();
 var cookieParser = require("cookie-parser");
@@ -25,7 +25,9 @@ exports.getOutofstock = async (req, res, next) => {
       ],
       where: {
         SKU : purchaseditemList.items,
-        Quantity: 0
+        Quantity: {
+          [Op.lt]: 1
+        }
       },
     });
 
