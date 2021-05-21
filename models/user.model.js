@@ -1,35 +1,39 @@
 module.exports = (sequelize, Sequelize) => {
-  var Product = sequelize.define(
-    "product",
+  const User = sequelize.define(
+    "user",
     {
-      ProductID: {
+      UserID: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
         primaryKey: true,
       },
-      ProductName: {
+      UserName: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        unique: true,
+      },
+      Email: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        unique: true,
+        validate: {
+          isEmail: true,
+        },
+      },
+      Password: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      SKU: {
+      Status: {
         type: Sequelize.STRING,
-        allowNull: false,
-        unique: true
-      },
-      Price: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-      },
-      QuantityLeft: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
+        default: "pending",
       },
     },
-
     {
       freezeTableName: true,
+      timestamps: false,
     }
   );
 
-  return Product;
+  return User;
 };

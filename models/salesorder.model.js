@@ -6,19 +6,44 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.INTEGER,
         autoIncrement: true,
         primaryKey: true,
-      },
-      Items: {
-        type: Sequelize.TEXT,
         allowNull: false,
+      },
+      UserID: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: "user",
+          key: "UserID",
+        },
+      },
+      ProductID: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: "product",
+          key: "ProductID",
+        },
+      },
+      ProductName: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      SKU: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        unique: true,
       },
       Total: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: false,
+      },
+      OrderedQuantity: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
       },
     },
     {
       freezeTableName: true,
-      timestamps: false,
     }
   );
 

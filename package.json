@@ -1,7 +1,7 @@
 {
-  "name": "express-js-with-sequelize-transaction",
+  "name": "express-js-with-sequelize-shoppingcart",
   "version": "1.0.0",
-  "description": "A demo repo for nodejs sequelize mysql transaction",
+  "description": "A demo repo for nodejs sequelize shoppingcart",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -13,6 +13,7 @@
   ],
   "author": "Vishwesh",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
@@ -20,10 +21,17 @@
     "express": "^4.17.1",
     "headers": "^0.9.6",
     "jsdom": "^16.5.3",
+    "jsonwebtoken": "^8.5.1",
+    "jwt-decode": "^3.1.2",
     "mysql2": "^2.2.5",
+    "passport": "^0.4.1",
+    "passport-jwt": "^4.0.0",
     "sequelize": "^6.6.2"
   },
   "devDependencies": {
     "nodemon": "^2.0.7"
-  }
+  },
+  "permissions": [
+    "identity"
+  ]
 }

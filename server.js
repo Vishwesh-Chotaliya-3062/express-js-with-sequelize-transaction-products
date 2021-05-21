@@ -1,18 +1,13 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const cors = require("cors");
 const path = require('path');
 const db = require("./models");
 const app = express();
+var cookieParser = require("cookie-parser");
+app.use(cookieParser());
 
 app.set('view engine', 'ejs');
 app.set('views', 'views');
-
-var corsOptions = {
-  origin: "http://localhost:8081",
-};
-
-app.use(cors(corsOptions));
 
 app.use(bodyParser.json());
 
@@ -25,25 +20,23 @@ try {
   console.error("Unable to connect to the database:", error);
 }
 
-db.sequelize.sync();
+// db.sequelize.sync();
 // drop the table if it already exists
-// db.sequelize.sync({ force: true }).then(() => {
-//   console.log("Drop and re-sync db.");
-// });
+db.sequelize.sync({ force: true }).then(() => {
+  console.log("Drop and re-sync db.");
+});
 
 // simple route
 app.get("/", (req, res) => {
+
   res.json({ message: "Welcome to application." });
 });
 
-require("./routes/transactions.route")(app);
-
-require("./routes/success.route")(app);
-
-require("./routes/outofstock.route")(app);
+require("./routes/login.routes")(app);
+require("./routes/signup.routes")(app);
+require("./routes/welcome.routes")(app);
 
 app.use(express.static(path.join(__dirname, 'views')));
-
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;
